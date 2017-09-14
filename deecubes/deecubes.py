@@ -20,8 +20,10 @@ def main():
                       help='Sync raw data storage and html output')
 
   req_args = parser.add_argument_group('required arguments')
-  req_args.add_argument('-r', '--raw-data-path', help='Raw data storage path')
-  req_args.add_argument('-o', '--output-path', help='HTML output path')
+  req_args.add_argument('-r', '--raw-data-path', required=True,
+                        help='Raw data storage path')
+  req_args.add_argument('-o', '--output-path', required=True,
+                        help='HTML output path')
 
   try:
     args = parser.parse_args()
