@@ -4,12 +4,14 @@ import os
 
 from deecubes.constants import VERSION
 
+
 def is_dir(path):
   if not os.path.isdir(path):
     msg = "{0} is not a directory".format(path)
     raise argparse.ArgumentTypeError(msg)
   else:
     return path
+
 
 def main():
   parser = argparse.ArgumentParser(prog='deecubes')
