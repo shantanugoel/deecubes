@@ -6,7 +6,7 @@ from deecubes.constants import VERSION
 def main():
   parser = argparse.ArgumentParser(prog='deecubes')
   parser.add_argument('-v', '--version', action='version',
-                      version='%(prog)s version' + VERSION)
+                      version='%(prog)s version ' + VERSION)
   parser.add_argument('-l', '--log', type=int, action='store',
                       help='Set log level. 0=> Warning, 1=>Info, 2=>Debug',
                       default=0)
