@@ -17,12 +17,17 @@ def main():
   parser = argparse.ArgumentParser(prog='deecubes')
   parser.add_argument('-v', '--version', action='version',
                       version='%(prog)s version ' + VERSION)
-  parser.add_argument('-l', '--log', type=int, action='store',
+  parser.add_argument('-l', '--log', metavar='LOGLEVEL', type=int, action='store',
                       help='Set log level. 0=> Warning, 1=>Info, 2=>Debug', default=0)
+  #TODO:
+  # Reset -> Delete all output and reset cache
+  # Purge -> Remove all output/input/cache
 
   action = parser.add_mutually_exclusive_group()
-  action.add_argument('-a', '--add', action='store', help='Generate shorturl for given link')
-  action.add_argument('-d', '--delete', action='store', help='Delete given shorturl')
+  action.add_argument('-a', '--add', nargs=2, metavar=('SHORTURL', 'URL'), action='store',
+                      help='Add given shorturl for given url')
+  action.add_argument('-g', '--generate', metavar='URL', action='store', help='Generate shorturl for given url')
+  action.add_argument('-d', '--delete', metavar='SHORTURL', action='store', help='Delete given shorturl')
   action.add_argument('-s', '--sync', action='store_true', default=False, help='Sync raw data storage and html output')
 
   req_args = parser.add_argument_group('required arguments')
