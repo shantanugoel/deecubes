@@ -1,8 +1,15 @@
 import argparse
 import logging
+import os
 
 from deecubes.constants import VERSION
 
+def is_dir(path):
+  if not os.path.isdir(path):
+    msg = "{0} is not a directory".format(path)
+    raise argparse.ArgumentTypeError(msg)
+  else:
+    return path
 
 def main():
   parser = argparse.ArgumentParser(prog='deecubes')
@@ -17,13 +24,10 @@ def main():
   action.add_argument('-s', '--sync', action='store_true', default=False, help='Sync raw data storage and html output')
 
   req_args = parser.add_argument_group('required arguments')
-  req_args.add_argument('-r', '--raw-data-path', required=True, help='Raw data storage path')
-  req_args.add_argument('-o', '--output-path', required=True, help='HTML output path')
+  req_args.add_argument('-r', '--raw-data-path', required=True, type=is_dir, help='Raw data storage path')
+  req_args.add_argument('-o', '--output-path', required=True, type=is_dir, help='HTML output path')
 
-  try:
-    args = parser.parse_args()
-  except:
-    exit(1)
+  args = parser.parse_args()
 
   if args.log >= 2:
     log_level = logging.DEBUG
