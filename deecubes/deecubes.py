@@ -3,6 +3,7 @@ import logging
 import os
 
 from deecubes.constants import VERSION
+from deecubes.shortener import Shortener
 
 
 def is_dir(path):
@@ -43,6 +44,10 @@ def main():
   else:
     log_level = logging.WARNING
   logging.basicConfig(level=log_level, format='%(asctime)s: %(filename)s - %(message)s')
+
+  shortener = Shortener(args.raw_data_path, args.output_path)
+  if(args.add):
+    shortener.add(args.add[0], args.add[1])
 
 
 if __name__ == "__main__":
