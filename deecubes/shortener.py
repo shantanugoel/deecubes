@@ -88,6 +88,9 @@ class Shortener():
     for file in raw_files:
       shorturl = os.path.splitext(os.path.basename(file))[0]
       if not os.path.isdir(os.path.join(self.output_path, shorturl)):
-        with open(file, 'r') as f:
-          url = f.readline()
-        self._save_output(shorturl, url)
+        try:
+          with open(file, 'r') as f:
+            url = f.readline()
+          self._save_output(shorturl, url)
+        except OSError as e:
+          logging.error('Error during syncing shorturl %s: %s' %(shorturl, e))
