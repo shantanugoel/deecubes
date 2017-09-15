@@ -18,6 +18,7 @@ setup(
   author_email='shantanu@shantanugoel.com',
   packages=find_packages(),
   include_package_data=True,
+  python_requires='>=3',
   url='https://github.com/shantanugoel/deecubes/',
   license='MIT',
   description='deecubes (DSSS - Damn Simple Static url Shortener)',
