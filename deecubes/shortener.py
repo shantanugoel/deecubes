@@ -1,4 +1,5 @@
 import os
+import shutil
 import logging
 import glob
 from binascii import crc32
@@ -24,22 +25,36 @@ class Shortener():
     # TODO: Handle conflicts while maintaining determinism
     raw_file = os.path.join(self.raw_path, raw_file_name)
     logging.debug('Saving raw file %s' % (raw_file))
-    with open(raw_file, 'w') as f:
-      f.write(url)
+    try:
+      with open(raw_file, 'w') as f:
+        f.write(url)
+    except OSError as e:
+      logging.error('Received error while saving raw %s: %s' % (shorturl, e))
 
   def _save_output(self, shorturl, url):
     output_dir = os.path.join(self.output_path, shorturl)
     output_file = os.path.join(output_dir, 'index.html')
     preview_file = os.path.join(output_dir, 'preview.html')
-    os.mkdir(output_dir)
+    try:
+      os.mkdir(output_dir)
+    except OSError as e:
+      logging.error('Received error while creating %s: %s' % (output_dir, e))
+      return
 
     logging.debug('Saving output file %s' % (output_file))
-    with open(output_file, 'w') as f:
-      f.write(REDIR_TEMPLATE_PRE + url + REDIR_TEMPLATE_POST)
+    try:
+      with open(output_file, 'w') as f:
+        f.write(REDIR_TEMPLATE_PRE + url + REDIR_TEMPLATE_POST)
+    except OSError as e:
+      logging.error('Received error while saving output %s: %s' % (shorturl, e))
+      return
 
-      logging.debug('Saving Preview file %s' % (preview_file))
-    with open(preview_file, 'w') as f:
-      f.write(url)
+    logging.debug('Saving Preview file %s' % (preview_file))
+    try:
+      with open(preview_file, 'w') as f:
+        f.write(url)
+    except OSError as e:
+      logging.error('Received error while saving preview %s: %s' % (shorturl, e))
 
   def _encode(self, url):
     # Calculate CRC32 and convert to base64
@@ -55,6 +70,16 @@ class Shortener():
     shorturl = self._encode(url)
     logging.debug('Generated shorturl %s for %s' % (shorturl, url))
     self.add(shorturl, url)
+
+  def delete(self, shorturl):
+    try:
+      shutil.rmtree(os.path.join(self.output_path, shorturl))
+      try:
+        os.unlink(os.path.join(self.raw_path, shorturl + '.txt'))
+      except OSError as e:
+        logging.error('Received error while deleting raw %s: %s' % (shorturl, e))
+    except OSError as e:
+      logging.error('Received error while deleting output %s: %s' % (shorturl, e))
 
   def sync(self):
     # TODO: Use asyncio to make this faster

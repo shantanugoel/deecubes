@@ -52,6 +52,8 @@ def main():
     shortener.generate(args.generate)
   elif args.sync:
     shortener.sync()
+  elif args.delete:
+    shortener.delete(args.delete)
   else:
     logging.error('No action specified')
 
