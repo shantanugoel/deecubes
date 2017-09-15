@@ -28,7 +28,7 @@ setup(
     ],
   },
   classifiers=[
-    'Development Status :: 2 - Pre-Alpha',
+    'Development Status :: 4 - Beta',
     'License :: OSI Approved :: MIT License',
     'Operating System :: POSIX',
     'Natural Language :: English',
