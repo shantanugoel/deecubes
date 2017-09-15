@@ -46,8 +46,14 @@ def main():
   logging.basicConfig(level=log_level, format='%(asctime)s: %(filename)s - %(message)s')
 
   shortener = Shortener(args.raw_data_path, args.output_path)
-  if(args.add):
+  if args.add:
     shortener.add(args.add[0], args.add[1])
+  elif args.generate:
+    shortener.generate(args.generate)
+  elif args.sync:
+    shortener.sync()
+  else:
+    logging.error('No action specified')
 
 
 if __name__ == "__main__":
