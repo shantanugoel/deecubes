@@ -20,7 +20,7 @@ def main():
                       version='%(prog)s version ' + VERSION)
   parser.add_argument('-l', '--log', metavar='LOGLEVEL', type=int, action='store',
                       help='Set log level. 0=> Warning, 1=>Info, 2=>Debug', default=0)
-  #TODO:
+  # TODO:
   # Reset -> Delete all output and reset cache
   # Purge -> Remove all output/input/cache
 

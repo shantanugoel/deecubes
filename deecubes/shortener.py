@@ -2,7 +2,7 @@ import os
 
 
 REDIR_TEMPLATE_PRE = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\''
-REDIR_TEMPLATE_POST='\'" /></head></html>'
+REDIR_TEMPLATE_POST = '\'" /></head></html>'
 
 
 class Shortener():
@@ -16,7 +16,7 @@ class Shortener():
 
   def _save(self, shorturl, url):
     raw_file_name = shorturl + '.txt'
-    #TODO: Handle conflicts while maintaining determinism
+    # TODO: Handle conflicts while maintaining determinism
     raw_file = os.path.join(self.raw_path, raw_file_name)
     output_dir = os.path.join(self.output_path, shorturl)
     output_file = os.path.join(output_dir, 'index.html')
