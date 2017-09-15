@@ -1,7 +1,7 @@
 import os
 
 
-REDIR_TEMPLATE_PRE = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\''
+REDIR_TEMPLATE_PRE = '<html><head><meta http-equiv="refresh" content="0;URL=\''
 REDIR_TEMPLATE_POST = '\'" /></head></html>'
 
 
