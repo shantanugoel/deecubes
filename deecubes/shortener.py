@@ -1,4 +1,5 @@
 import os
+import logging
 from binascii import crc32
 
 from deecubes.utils import base64_encode
@@ -25,10 +26,16 @@ class Shortener():
     output_file = os.path.join(output_dir, 'index.html')
     preview_file = os.path.join(output_dir, 'preview.html')
     os.mkdir(output_dir)
+
+    logging.debug('Saving raw file %s' % (raw_file))
     with open(raw_file, 'w') as f:
       f.write(url)
+
+    logging.debug('Saving output file %s' % (output_file))
     with open(output_file, 'w') as f:
       f.write(REDIR_TEMPLATE_PRE + url + REDIR_TEMPLATE_POST)
+
+      logging.debug('Saving Preview file %s' % (preview_file))
     with open(preview_file, 'w') as f:
       f.write(url)
 
@@ -38,10 +45,12 @@ class Shortener():
     return base64_encode(crc32(bytes(url, 'utf-8'))) + base64_encode(sum(bytearray(url, 'utf-8')))
 
   def add(self, shorturl, url):
+    logging.debug('Adding shorturl %s for %s' % (shorturl, url))
     self._save(shorturl, url)
 
   def generate(self, url):
     shorturl = self._encode(url)
+    logging.debug('Generated shorturl %s for %s' % (shorturl, url))
     self.add(shorturl, url)
 
   def sync(self):
