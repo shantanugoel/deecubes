@@ -23,7 +23,9 @@ https://shgl.in/ uses this project. Repository for reference: https://shgl.in/de
 
 It's recommended to install deecubes from pypi using pip
 
-`pip install deecubes`
+```
+pip install deecubes
+```
 
 # Deployment methods
 
@@ -61,6 +63,34 @@ required arguments:
   -o OUTPUT_PATH, --output-path OUTPUT_PATH
                         HTML output path
 
+```
+
+Notes:
+
+- Raw Path: A directory where deecubes stores raw information about urls. This can be empty directory if you are using add/generate commands for urls. Otherwise, you can add a .txt file here with the content being a long url. Then when, sync command is used, deecubes will add corresponding shorturl html files in output directory using the filename as the shorturl.
+
+- Output Path: Path where the static website is generated. This directory should be used for deployment.
+
+- Raw path and output path are mandatory to specify for all commands
+
+## Examples
+
+Add a specific shorturl for a long url
+
+```
+deecubes -r ./raw -o ./public -a github https://github.com/shantanugoel/
+```
+
+Add a long url and deecubes will generate a shorturl on its own
+
+```
+deecubes -r ./raw -o ./public -g https://github.com/shantanugoel/
+```
+
+Automatically generate shorturls in output dir for any .txt files that were manually added to raw directory
+
+```
+deecubes -r ./raw -o ./public --sync
 ```
 
 # TODO
