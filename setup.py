@@ -8,7 +8,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 with open('requirements.txt') as f:
   requirements = f.read().splitlines()
 
-version = '0.2.1'
+version = '0.2.2'
 
 setup(
   name='deecubes',
