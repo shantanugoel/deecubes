@@ -31,6 +31,12 @@ class Shortener():
     except OSError as e:
       logging.error('Received error while saving raw %s: %s' % (shorturl, e))
 
+  def _clean_dir(dir):
+    try:
+      shutil.rmtree(dir)
+    except OSError as e:
+      logging.error("Could not clean up %s because: %s" % (dir, e))
+
   def _save_output(self, shorturl, url):
     output_dir = os.path.join(self.output_path, shorturl)
     output_file = os.path.join(output_dir, 'index.html')
@@ -39,7 +45,7 @@ class Shortener():
       os.mkdir(output_dir)
     except OSError as e:
       logging.error('Received error while creating %s: %s' % (output_dir, e))
-      return
+      return None
 
     logging.debug('Saving output file %s' % (output_file))
     try:
@@ -47,7 +53,8 @@ class Shortener():
         f.write(REDIR_TEMPLATE_PRE + url + REDIR_TEMPLATE_POST)
     except OSError as e:
       logging.error('Received error while saving output %s: %s' % (shorturl, e))
-      return
+      self._clean_dir(output_dir)
+      return None
 
     logging.debug('Saving Preview file %s' % (preview_file))
     try:
@@ -55,6 +62,10 @@ class Shortener():
         f.write(url)
     except OSError as e:
       logging.error('Received error while saving preview %s: %s' % (shorturl, e))
+      self._clean_dir(output_dir)
+      return None
+
+    return output_dir
 
   def _encode(self, url):
     # Calculate CRC32 and convert to base64
@@ -64,7 +75,9 @@ class Shortener():
   def add(self, shorturl, url):
     logging.debug('Adding shorturl %s for %s' % (shorturl, url))
     self._save_raw(shorturl, url)
-    self._save_output(shorturl, url)
+    output_dir = self._save_output(shorturl, url)
+    if output_dir:
+      print("Added shorturl at %s " % output_dir)
 
   def generate(self, url):
     shorturl = self._encode(url)
@@ -75,7 +88,9 @@ class Shortener():
     try:
       shutil.rmtree(os.path.join(self.output_path, shorturl))
       try:
-        os.unlink(os.path.join(self.raw_path, shorturl + '.txt'))
+        delete_file = os.path.join(self.raw_path, shorturl + '.txt')
+        os.unlink(delete_file)
+        print("Deleted file %s" % delete_file)
       except OSError as e:
         logging.error('Received error while deleting raw %s: %s' % (shorturl, e))
     except OSError as e:
