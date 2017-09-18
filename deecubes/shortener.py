@@ -102,7 +102,7 @@ class Shortener():
     raw_files = glob.glob(search_pattern)
     for file in raw_files:
       shorturl = os.path.splitext(os.path.basename(file))[0]
-      if not os.path.isdir(os.path.join(self.out  put_path, shorturl)):
+      if not os.path.isdir(os.path.join(self.output_path, shorturl)):
         try:
           with open(file, 'r') as f:
             url = f.readline()
