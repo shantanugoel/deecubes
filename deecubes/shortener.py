@@ -102,10 +102,13 @@ class Shortener():
     raw_files = glob.glob(search_pattern)
     for file in raw_files:
       shorturl = os.path.splitext(os.path.basename(file))[0]
-      if not os.path.isdir(os.path.join(self.output_path, shorturl)):
+      if not os.path.isdir(os.path.join(self.out  put_path, shorturl)):
         try:
           with open(file, 'r') as f:
             url = f.readline()
           self._save_output(shorturl, url)
         except OSError as e:
           logging.error('Error during syncing shorturl %s: %s' %(shorturl, e))
+    else:
+        logging.error('No files found for syncing')
+        return None
