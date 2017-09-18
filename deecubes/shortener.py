@@ -109,3 +109,6 @@ class Shortener():
           self._save_output(shorturl, url)
         except OSError as e:
           logging.error('Error during syncing shorturl %s: %s' %(shorturl, e))
+    else:
+        logging.warning('No files found for syncing')
+        return None
