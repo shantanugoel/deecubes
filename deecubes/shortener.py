@@ -77,12 +77,15 @@ class Shortener():
     self._save_raw(shorturl, url)
     output_dir = self._save_output(shorturl, url)
     if output_dir:
-      print("Added shorturl at %s " % output_dir)
+      logging.debug("Added shorturl at %s " % output_dir)
+      return shorturl
+    else:
+      return None
 
   def generate(self, url):
     shorturl = self._encode(url)
     logging.debug('Generated shorturl %s for %s' % (shorturl, url))
-    self.add(shorturl, url)
+    return self.add(shorturl, url)
 
   def delete(self, shorturl):
     try:
@@ -90,11 +93,14 @@ class Shortener():
       try:
         delete_file = os.path.join(self.raw_path, shorturl + '.txt')
         os.unlink(delete_file)
-        print("Deleted file %s" % delete_file)
+        logging.debug("Deleted file %s" % delete_file)
+        return shorturl
       except OSError as e:
         logging.error('Received error while deleting raw %s: %s' % (shorturl, e))
+        return None
     except OSError as e:
       logging.error('Received error while deleting output %s: %s' % (shorturl, e))
+      return None
 
   def sync(self):
     # TODO: Use asyncio to make this faster

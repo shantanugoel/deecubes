@@ -44,13 +44,25 @@ def main():
 
   shortener = Shortener(args.raw_data_path, args.output_path)
   if args.add:
-    shortener.add(args.add[0], args.add[1])
+    shorturl = shortener.add(args.add[0], args.add[1])
+    if shorturl:
+      print('Added shorturl: ' + shorturl)
+    else:
+      print('Could not add shorturl')
   elif args.generate:
-    shortener.generate(args.generate)
+    shorturl = shortener.generate(args.generate)
+    if shorturl:
+      print('Generated shorturl: ' + shorturl)
+    else:
+      print('Could not generate shorturl')
   elif args.sync:
     shortener.sync()
   elif args.delete:
-    shortener.delete(args.delete)
+    shorturl = shortener.delete(args.delete)
+    if shorturl:
+      print('Deleted shorturl: ' + shorturl)
+    else:
+      print('Could not delete shorturl')
   else:
     logging.error('No action specified')
 
