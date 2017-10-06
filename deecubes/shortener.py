@@ -21,15 +21,34 @@ class Shortener():
     self.output_path = output_path
 
   def _save_raw(self, shorturl, url):
-    raw_file_name = shorturl + '.txt'
-    # TODO: Handle conflicts while maintaining determinism
-    raw_file = os.path.join(self.raw_path, raw_file_name)
+    # Handle collision
+    tie_breaker_char = ''
+    tie_breaker_counter = 0
+    while True:
+      shorturl = shorturl + tie_breaker_char
+      raw_file_name = shorturl + '.txt'
+      raw_file = os.path.join(self.raw_path, raw_file_name)
+      if os.path.exists(raw_file):
+        with open(raw_file, 'r') as f:
+          url_in_file = f.readline()
+        if url_in_file == url:
+          logging.info("Existing url. Returning existing shorturl")
+          return shorturl, False
+        else:
+          tie_breaker_char = base64_encode(tie_breaker_counter)
+          tie_breaker_counter += 1
+      else:
+        # No collision so break out of the loop
+        break
+
     logging.debug('Saving raw file %s' % (raw_file))
     try:
       with open(raw_file, 'w') as f:
         f.write(url)
+      return shorturl, True
     except OSError as e:
       logging.error('Received error while saving raw %s: %s' % (shorturl, e))
+      return None, False
 
   def _clean_dir(dir):
     try:
@@ -74,13 +93,15 @@ class Shortener():
 
   def add(self, shorturl, url):
     logging.debug('Adding shorturl %s for %s' % (shorturl, url))
-    self._save_raw(shorturl, url)
-    output_dir = self._save_output(shorturl, url)
-    if output_dir:
-      logging.debug("Added shorturl at %s " % output_dir)
-      return shorturl
-    else:
-      return None
+    shorturl, raw_saved = self._save_raw(shorturl, url)
+    if raw_saved:
+      output_dir = self._save_output(shorturl, url)
+      if output_dir:
+        logging.debug("Added shorturl at %s " % output_dir)
+        return shorturl
+      else:
+        return None
+    return shorturl
 
   def generate(self, url):
     shorturl = self._encode(url)
@@ -103,7 +124,6 @@ class Shortener():
       return None
 
   def sync(self):
-    # TODO: Use asyncio to make this faster
     search_pattern = os.path.join(self.raw_path, '*.txt')
     raw_files = glob.glob(search_pattern)
     for file in raw_files:
