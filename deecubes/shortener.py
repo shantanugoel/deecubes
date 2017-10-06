@@ -3,6 +3,7 @@ import shutil
 import logging
 import glob
 from binascii import crc32
+from urllib.parse import urljoin
 
 from deecubes.utils import base64_encode
 
@@ -91,7 +92,12 @@ class Shortener():
     # Add 16 LSB of simple checksum base64 for additional collision avoidance
     return base64_encode(crc32(bytes(url, 'utf-8'))) + base64_encode(sum(bytearray(url, 'utf-8')))
 
+  def _fix_url(self, url):
+    # Fix missing scheme in most cases
+    return urljoin('http://', url)
+
   def add(self, shorturl, url):
+    url = self._fix_url(url)
     logging.debug('Adding shorturl %s for %s' % (shorturl, url))
     shorturl, raw_saved = self._save_raw(shorturl, url)
     if raw_saved:
@@ -104,6 +110,7 @@ class Shortener():
     return shorturl
 
   def generate(self, url):
+    url = self._fix_url(url)
     shorturl = self._encode(url)
     logging.debug('Generated shorturl %s for %s' % (shorturl, url))
     return self.add(shorturl, url)
