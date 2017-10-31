@@ -21,7 +21,7 @@ https://shgl.in/ uses this project. Repository for reference: https://shgl.in/de
 
 # Installation
 
-It's recommended to install deecubes from pypi using pip
+deecubes is compatibly wit python3 only. It's recommended to install deecubes from pypi using pip
 
 ```
 pip install deecubes
