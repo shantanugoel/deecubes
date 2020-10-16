@@ -16,9 +16,6 @@ Static website of shorturls redirecting to your long urls
 
 One can also go to shorturl/preview.html to see the long url it points to without getting redirected.
 
-# Demo Website:
-https://shgl.in/ uses this project. Repository for reference: https://shgl.in/deecubesdemo
-
 # Installation
 
 deecubes is compatible wit python3 only. It's recommended to install deecubes from pypi using pip
